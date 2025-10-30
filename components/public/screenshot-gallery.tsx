@@ -36,14 +36,21 @@ export function ScreenshotGallery({ screenshots, projectTitle }: ScreenshotGalle
     const handleKeyDown = (e: KeyboardEvent) => {
       if (selectedIndex === null) return;
 
-      if (e.key === 'Escape') closeLightbox();
-      if (e.key === 'ArrowLeft') navigatePrevious();
-      if (e.key === 'ArrowRight') navigateNext();
+      if (e.key === 'Escape') {
+        setSelectedIndex(null);
+        document.body.style.overflow = 'unset';
+      }
+      if (e.key === 'ArrowLeft' && selectedIndex > 0) {
+        setSelectedIndex(selectedIndex - 1);
+      }
+      if (e.key === 'ArrowRight' && selectedIndex < screenshots.length - 1) {
+        setSelectedIndex(selectedIndex + 1);
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedIndex, navigatePrevious, navigateNext]);
+  }, [selectedIndex, screenshots.length]);
 
   if (!screenshots || screenshots.length === 0) {
     return null;
