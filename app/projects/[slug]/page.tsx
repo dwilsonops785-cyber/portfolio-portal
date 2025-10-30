@@ -1,0 +1,195 @@
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import { getProjectBySlug, getAllProjects } from '@/lib/utils/projects';
+import { Card } from '@/components/ui/card';
+import { ScreenshotGallery } from '@/components/public/screenshot-gallery';
+import { DemoAccessButton } from '@/components/public/demo-access-button';
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  const projects = await getAllProjects();
+  return projects.map((project) => ({
+    slug: project.slug,
+  }));
+}
+
+export default async function ProjectDetailPage({ params }: PageProps) {
+  const { slug } = await params;
+  const project = await getProjectBySlug(slug);
+
+  if (!project) {
+    notFound();
+  }
+
+  return (
+    <div className="min-h-screen">
+      {/* Header */}
+      <div className="border-b border-gray-800">
+        <div className="max-w-5xl mx-auto px-8 py-8">
+          <Link href="/" className="text-accent hover:underline text-sm mb-4 inline-block">
+            ← Back to Projects
+          </Link>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="max-w-5xl mx-auto px-8 py-12">
+        {/* Title and Status */}
+        <div className="mb-8">
+          <div className="flex items-start justify-between mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold">{project.title}</h1>
+            {project.featured && (
+              <span className="text-sm px-3 py-1 bg-accent/20 text-accent rounded ml-4 flex-shrink-0">
+                Featured
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-4">
+            <span
+              className={`text-sm px-4 py-2 rounded ${
+                project.status === 'production'
+                  ? 'bg-success/20 text-success'
+                  : project.status === 'development'
+                  ? 'bg-warning/20 text-warning'
+                  : 'bg-gray-700 text-gray-300'
+              }`}
+            >
+              {project.status}
+            </span>
+            {project.currentVersion && (
+              <span className="text-gray-400">Version {project.currentVersion}</span>
+            )}
+          </div>
+        </div>
+
+        {/* Thumbnail */}
+        {project.thumbnailUrl && (
+          <div className="mb-8 rounded-lg overflow-hidden bg-gray-900">
+            <img
+              src={project.thumbnailUrl}
+              alt={project.title}
+              className="w-full h-auto"
+            />
+          </div>
+        )}
+
+        {/* Short Description */}
+        <Card className="mb-8 p-6">
+          <p className="text-lg text-gray-300">{project.shortDescription}</p>
+        </Card>
+
+        {/* Long Description */}
+        {project.longDescription && (
+          <Card className="mb-8 p-6">
+            <h2 className="text-2xl font-bold mb-4">About This Project</h2>
+            <div className="prose prose-invert max-w-none">
+              <p className="text-gray-300 whitespace-pre-wrap">{project.longDescription}</p>
+            </div>
+          </Card>
+        )}
+
+        {/* Screenshots */}
+        {project.screenshots && project.screenshots.length > 0 && (
+          <Card className="mb-8 p-6">
+            <h2 className="text-2xl font-bold mb-4">Screenshots</h2>
+            <ScreenshotGallery screenshots={project.screenshots} projectTitle={project.title} />
+          </Card>
+        )}
+
+        {/* Demo */}
+        {project.demoUrl && project.demoType !== 'none' && (
+          <Card className="mb-8 p-6">
+            <h2 className="text-2xl font-bold mb-4">
+              {project.demoType === 'live' ? 'Live Demo' : 'Video Demo'}
+            </h2>
+            <DemoAccessButton
+              demoUrl={project.demoUrl}
+              demoType={project.demoType}
+              projectSlug={project.slug}
+            />
+          </Card>
+        )}
+
+        {/* Technologies */}
+        {project.technologies.length > 0 && (
+          <Card className="mb-8 p-6">
+            <h2 className="text-2xl font-bold mb-4">Technologies Used</h2>
+            <div className="flex flex-wrap gap-3">
+              {project.technologies.map((tech) => (
+                <span
+                  key={tech}
+                  className="px-4 py-2 bg-card border border-gray-700 rounded-lg text-gray-300"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </Card>
+        )}
+
+        {/* Labels */}
+        {project.labels.length > 0 && (
+          <Card className="mb-8 p-6">
+            <h2 className="text-2xl font-bold mb-4">Categories</h2>
+            <div className="flex flex-wrap gap-3">
+              {project.labels.map((label) => (
+                <span key={label} className="px-4 py-2 bg-accent/10 text-accent rounded-lg">
+                  {label}
+                </span>
+              ))}
+            </div>
+          </Card>
+        )}
+
+        {/* Metrics */}
+        {project.metrics && (
+          <Card className="mb-8 p-6">
+            <h2 className="text-2xl font-bold mb-4">Project Metrics</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {project.metrics.startDate && (
+                <div>
+                  <div className="text-sm text-gray-400 mb-1">Start Date</div>
+                  <div className="text-lg font-medium">
+                    {new Date(project.metrics.startDate).toLocaleDateString()}
+                  </div>
+                </div>
+              )}
+              {project.metrics.completionDate && (
+                <div>
+                  <div className="text-sm text-gray-400 mb-1">Completion Date</div>
+                  <div className="text-lg font-medium">
+                    {new Date(project.metrics.completionDate).toLocaleDateString()}
+                  </div>
+                </div>
+              )}
+              {project.metrics.developmentHours && (
+                <div>
+                  <div className="text-sm text-gray-400 mb-1">Development Hours</div>
+                  <div className="text-lg font-medium">{project.metrics.developmentHours}h</div>
+                </div>
+              )}
+            </div>
+          </Card>
+        )}
+
+        {/* Metadata */}
+        <Card className="p-6">
+          <h2 className="text-2xl font-bold mb-4">Project Information</h2>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-gray-400">Created</span>
+              <span>{new Date(project.createdAt).toLocaleDateString()}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Last Updated</span>
+              <span>{new Date(project.updatedAt).toLocaleDateString()}</span>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}

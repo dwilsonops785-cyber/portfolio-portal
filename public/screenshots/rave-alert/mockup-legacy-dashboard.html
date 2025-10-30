@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rave Alert Quick Dispatch - Legacy Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            color: #1e293b;
+        }
+
+        /* Header */
+        .header {
+            background: #ffffff;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 0;
+            background: #f1f5f9;
+            border-radius: 0.5rem;
+            border: 1px solid #cbd5e1;
+            overflow: hidden;
+        }
+
+        .toggle-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .toggle-btn:not(.active):hover {
+            background: #e2e8f0;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            border-radius: 0.5rem;
+        }
+
+        .status-dot {
+            width: 0.625rem;
+            height: 0.625rem;
+            background: #16a34a;
+            border-radius: 50%;
+        }
+
+        .status-text {
+            color: #16a34a;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Main container */
+        .container {
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value.blue { color: #2563eb; }
+        .stat-value.purple { color: #7c3aed; }
+        .stat-value.green { color: #16a34a; }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        /* Template grid */
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .template-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            border: 2px solid #e2e8f0;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .template-card:hover {
+            border-color: #2563eb;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .template-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .template-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .template-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 2rem;
+            height: 2rem;
+            background: #2563eb;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: white;
+        }
+
+        /* Recent alerts sidebar */
+        .recent-alerts {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            max-height: 800px;
+            overflow-y: auto;
+        }
+
+        .recent-alerts::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .recent-alerts::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        .recent-alerts::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .recent-alerts::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .recent-alerts-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1e293b;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .search-bar::placeholder {
+            color: #94a3b8;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #2563eb;
+            background: white;
+        }
+
+        .alert-item {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .alert-item:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .alert-time {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-template {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #1e293b;
+        }
+
+        .alert-data {
+            font-size: 0.875rem;
+            color: #475569;
+        }
+
+        .success-indicator {
+            width: 8px;
+            height: 8px;
+            background: #16a34a;
+            border-radius: 50%;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 2rem;
+            height: 2rem;
+            background: #2563eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 0.875rem;
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .help-btn {
+            width: 2rem;
+            height: 2rem;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        .help-btn:hover {
+            background: #e2e8f0;
+            border-color: #94a3b8;
+        }
+
+        .logout-btn {
+            padding: 0.5rem 1rem;
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 0.5rem;
+            color: #dc2626;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .logout-btn:hover {
+            background: #fecaca;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="app-title">
+                <span>⚡</span>
+                Rave Alert Quick Dispatch
+            </div>
+            <div class="toggle-group">
+                <button class="toggle-btn active">Light</button>
+                <button class="toggle-btn">Dark</button>
+            </div>
+            <div class="toggle-group">
+                <button class="toggle-btn active">Legacy</button>
+                <button class="toggle-btn">Futuristic</button>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="connection-status">
+                <div class="status-dot"></div>
+                <span class="status-text">Connected</span>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">JD</div>
+                <span class="user-name">John Doe</span>
+            </div>
+            <div class="help-btn">?</div>
+            <button class="logout-btn">Logout</button>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="container">
+        <!-- Stats cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value blue">12</div>
+                <div class="stat-label">Alerts Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value purple">47</div>
+                <div class="stat-label">This Week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value green">5m</div>
+                <div class="stat-label">Last Alert</div>
+            </div>
+        </div>
+
+        <!-- Content grid -->
+        <div class="content-wrapper">
+            <!-- Template buttons -->
+            <div class="template-grid">
+                <div class="template-card">
+                    <div class="template-badge">1</div>
+                    <div class="template-icon">🏥</div>
+                    <div class="template-name">Medical Examiner</div>
+                </div>
+                <div class="template-card">
+                    <div class="template-badge">2</div>
+                    <div class="template-icon">📻</div>
+                    <div class="template-name">Operations Notify</div>
+                </div>
+                <div class="template-card">
+                    <div class="template-badge">3</div>
+                    <div class="template-icon">🚨</div>
+                    <div class="template-name">Emergency Dispatch</div>
+                </div>
+                <div class="template-card">
+                    <div class="template-badge">4</div>
+                    <div class="template-icon">🚔</div>
+                    <div class="template-name">Officer Assist</div>
+                </div>
+                <div class="template-card">
+                    <div class="template-badge">5</div>
+                    <div class="template-icon">🔥</div>
+                    <div class="template-name">Fire Department</div>
+                </div>
+                <div class="template-card">
+                    <div class="template-badge">6</div>
+                    <div class="template-icon">⚠️</div>
+                    <div class="template-name">Public Alert</div>
+                </div>
+                <div class="template-card">
+                    <div class="template-badge">7</div>
+                    <div class="template-icon">🏢</div>
+                    <div class="template-name">Building Security</div>
+                </div>
+                <div class="template-card">
+                    <div class="template-badge">8</div>
+                    <div class="template-icon">🚑</div>
+                    <div class="template-name">EMS Response</div>
+                </div>
+                <div class="template-card">
+                    <div class="template-badge">9</div>
+                    <div class="template-icon">📢</div>
+                    <div class="template-name">Mass Notification</div>
+                </div>
+            </div>
+
+            <!-- Recent alerts -->
+            <div class="recent-alerts">
+                <div class="recent-alerts-title">Recent Alerts (Last 24h)</div>
+                <input type="text" class="search-bar" placeholder="Search alerts...">
+
+                <div class="alert-item">
+                    <div class="alert-time">5 minutes ago</div>
+                    <div class="alert-template">
+                        <span class="success-indicator"></span>
+                        <span>Medical Examiner</span>
+                    </div>
+                    <div class="alert-data">Officer Smith - (555) 123-4567</div>
+                    <div class="alert-data">123 Main St</div>
+                </div>
+
+                <div class="alert-item">
+                    <div class="alert-time">15 minutes ago</div>
+                    <div class="alert-template">
+                        <span class="success-indicator"></span>
+                        <span>Operations Notify</span>
+                    </div>
+                    <div class="alert-data">Traffic Incident - Highway 101</div>
+                </div>
+
+                <div class="alert-item">
+                    <div class="alert-time">32 minutes ago</div>
+                    <div class="alert-template">
+                        <span class="success-indicator"></span>
+                        <span>Emergency Dispatch</span>
+                    </div>
+                    <div class="alert-data">Sgt. Johnson - (555) 987-6543</div>
+                    <div class="alert-data">456 Oak Avenue</div>
+                </div>
+
+                <div class="alert-item">
+                    <div class="alert-time">1 hour ago</div>
+                    <div class="alert-template">
+                        <span class="success-indicator"></span>
+                        <span>Fire Department</span>
+                    </div>
+                    <div class="alert-data">Structure Fire - 789 Pine St</div>
+                </div>
+
+                <div class="alert-item">
+                    <div class="alert-time">2 hours ago</div>
+                    <div class="alert-template">
+                        <span class="success-indicator"></span>
+                        <span>Officer Assist</span>
+                    </div>
+                    <div class="alert-data">Officer Davis - Backup Requested</div>
+                </div>
+
+                <div class="alert-item">
+                    <div class="alert-time">3 hours ago</div>
+                    <div class="alert-template">
+                        <span class="success-indicator"></span>
+                        <span>Public Alert</span>
+                    </div>
+                    <div class="alert-data">Weather Advisory - County Wide</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

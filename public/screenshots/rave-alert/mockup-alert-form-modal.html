@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rave Alert Quick Dispatch - Alert Form Modal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Blurred background effect */
+        .background-blur {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            z-index: 1;
+        }
+
+        /* Modal */
+        .modal {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 600px;
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border-radius: 1.5rem;
+            border: 1px solid;
+            border-image: linear-gradient(135deg, rgba(6, 182, 212, 0.5), rgba(168, 85, 247, 0.5)) 1;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+                        0 0 0 1px rgba(255, 255, 255, 0.1),
+                        0 0 40px rgba(6, 182, 212, 0.2);
+            animation: modalAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Header */
+        .modal-header {
+            padding: 2rem 2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .modal-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .modal-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.6));
+        }
+
+        .modal-title-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #06b6d4, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .close-btn {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #f87171;
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+
+        .close-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+            transform: rotate(90deg);
+        }
+
+        /* Body */
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .required-indicator {
+            color: #f87171;
+            margin-left: 0.25rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: rgba(15, 23, 42, 0.4);
+            border: 2px solid rgba(6, 182, 212, 0.2);
+            border-radius: 0.75rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-input::placeholder {
+            color: #64748b;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1),
+                        0 0 20px rgba(6, 182, 212, 0.3);
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .form-input.filled {
+            border-color: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+        }
+
+        .char-counter {
+            text-align: right;
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+
+        /* Preview section */
+        .preview-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(6, 182, 212, 0.05);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 0.75rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .preview-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #06b6d4;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .preview-text {
+            color: #e2e8f0;
+            line-height: 1.6;
+            font-size: 0.938rem;
+        }
+
+        .placeholder-highlight {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(168, 85, 247, 0.2));
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            color: #06b6d4;
+        }
+
+        /* Footer */
+        .modal-footer {
+            padding: 1.5rem 2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .keyboard-hint {
+            font-size: 0.75rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .kbd {
+            padding: 0.25rem 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.25rem;
+            font-family: monospace;
+            font-size: 0.75rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 0.938rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #cbd5e1;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-send {
+            background: linear-gradient(135deg, #06b6d4, #a855f7);
+            color: white;
+            border: none;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-send::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #0891b2, #9333ea);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn-send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.6),
+                        0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-send:hover::before {
+            opacity: 1;
+        }
+
+        .btn-send span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-icon {
+            font-size: 1.125rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Blurred background -->
+    <div class="background-blur"></div>
+
+    <!-- Modal -->
+    <div class="modal">
+        <!-- Header -->
+        <div class="modal-header">
+            <div class="modal-title">
+                <span class="modal-icon">🏥</span>
+                <h2 class="modal-title-text">Send Alert: Medical Examiner</h2>
+            </div>
+            <button class="close-btn">×</button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                    <label class="form-label">
+                        Officer Name
+                        <span class="required-indicator">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        class="form-input filled"
+                        placeholder="Enter officer name"
+                        value="Officer John Smith"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Contact Number
+                        <span class="required-indicator">*</span>
+                    </label>
+                    <input
+                        type="tel"
+                        class="form-input filled"
+                        placeholder="(555) 123-4567"
+                        value="(555) 123-4567"
+                    />
+                    <div class="char-counter">Auto-formatted</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Location Address
+                        <span class="required-indicator">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        class="form-input filled"
+                        placeholder="Enter location address"
+                        value="123 Main Street, Springfield"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Additional Notes
+                    </label>
+                    <input
+                        type="text"
+                        class="form-input"
+                        placeholder="Optional details (e.g., case number)"
+                    />
+                </div>
+            </form>
+
+            <!-- Message Preview -->
+            <div class="preview-section">
+                <div class="preview-label">
+                    <span>📋</span>
+                    Message Preview
+                </div>
+                <div class="preview-text">
+                    URGENT: Please call <span class="placeholder-highlight">Officer John Smith</span> at
+                    <span class="placeholder-highlight">(555) 123-4567</span> regarding a death at
+                    <span class="placeholder-highlight">123 Main Street, Springfield</span>.
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+            <div class="keyboard-hint">
+                <span>Press</span>
+                <span class="kbd">Enter</span>
+                <span>to send or</span>
+                <span class="kbd">Esc</span>
+                <span>to cancel</span>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-cancel">
+                    <span class="btn-icon">✕</span>
+                    <span>Cancel</span>
+                </button>
+                <button class="btn btn-send">
+                    <span>Send Alert</span>
+                    <span class="btn-icon">⚡</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
