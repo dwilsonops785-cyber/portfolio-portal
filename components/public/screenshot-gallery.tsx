@@ -10,10 +10,6 @@ interface ScreenshotGalleryProps {
 export function ScreenshotGallery({ screenshots, projectTitle }: ScreenshotGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  if (!screenshots || screenshots.length === 0) {
-    return null;
-  }
-
   const openLightbox = (index: number) => {
     setSelectedIndex(index);
     document.body.style.overflow = 'hidden';
@@ -47,7 +43,11 @@ export function ScreenshotGallery({ screenshots, projectTitle }: ScreenshotGalle
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedIndex]);
+  }, [selectedIndex, navigatePrevious, navigateNext]);
+
+  if (!screenshots || screenshots.length === 0) {
+    return null;
+  }
 
   return (
     <>
