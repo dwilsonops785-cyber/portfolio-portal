@@ -12,11 +12,11 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-8 py-24">
           <div className="max-w-3xl">
             <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              AI-Assisted Development Portfolio
+              SNO911 AI-Assisted Development Applications
             </h1>
             <p className="text-xl text-gray-400 mb-8">
               Showcasing the power of human-AI collaboration in software development.
-              Explore projects built with cutting-edge AI assistance and modern technologies.
+              Explore projects built with cutting-edge AI assistance and modern technologies to address operational needs in public safety.
             </p>
             <div className="flex gap-4">
               <div className="glass-card px-6 py-4">
