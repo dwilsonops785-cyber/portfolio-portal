@@ -190,7 +190,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               prose-headings:font-bold
               prose-h1:text-3xl prose-h1:text-accent prose-h1:mb-6 prose-h1:mt-0
               prose-h2:text-2xl prose-h2:text-accent prose-h2:mb-5 prose-h2:mt-10 prose-h2:pb-3 prose-h2:border-b-2 prose-h2:border-accent/30
-              prose-h3:text-lg prose-h3:text-blue-400 prose-h3:mb-3 prose-h3:mt-6 prose-h3:font-bold prose-h3:bg-gray-800/40 prose-h3:px-4 prose-h3:py-2 prose-h3:rounded-lg prose-h3:border prose-h3:border-gray-700/50
+              prose-h3:text-lg prose-h3:text-blue-400 prose-h3:mb-5 prose-h3:mt-8 prose-h3:font-bold prose-h3:text-center prose-h3:pb-3 prose-h3:border-b-2 prose-h3:border-blue-500
               prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-4 prose-p:text-base
               prose-ul:my-3 prose-ul:space-y-2.5 prose-ul:bg-gray-900/30 prose-ul:p-4 prose-ul:rounded-lg prose-ul:border prose-ul:border-gray-800
               prose-li:text-gray-300 prose-li:leading-relaxed prose-li:text-[15px]
