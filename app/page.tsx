@@ -1,5 +1,6 @@
 import { getAllProjects } from '@/lib/utils/projects';
 import { ProjectsGallery } from './projects-gallery';
+import { ProjectShowcaseCarousel } from '@/components/public/project-showcase-carousel';
 
 export default async function HomePage() {
   const projects = await getAllProjects();
@@ -38,6 +39,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Project Showcase Carousel */}
+      <ProjectShowcaseCarousel projects={projects} />
 
       {/* Projects Gallery */}
       <section className="max-w-7xl mx-auto px-8 py-16">
