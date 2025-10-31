@@ -13,7 +13,7 @@ const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days
  * In production, use environment variable
  */
 export function verifyPassword(password: string): boolean {
-  const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'; // Default for development
+  const adminPassword = process.env.ADMIN_PASSWORD || '$$Admin!$@#';
   return password === adminPassword;
 }
 
