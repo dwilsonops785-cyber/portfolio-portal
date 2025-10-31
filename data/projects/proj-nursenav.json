@@ -1,0 +1,44 @@
+{
+  "id": "proj-nursenav-001",
+  "slug": "nursenav-sms-manager",
+  "title": "NurseNav SMS Manager",
+  "shortDescription": "A desktop application for managing bulk SMS communications to patients in the Nurse Navigation Program. Features automated CSV processing, Twilio integration, real-time delivery tracking, and comprehensive statistics visualization.",
+  "longDescription": "# NurseNav SMS Manager\n\nA production desktop application designed for SNO911's Nurse Navigation Program to efficiently manage bulk SMS communications with patients.\n\n## Key Features\n\n### Automated Directory Monitoring\n- Watches a designated folder for new CSV files containing patient contact information\n- Automatically processes and sends SMS messages when new files are detected\n- Tracks processed files to prevent duplicate messages\n- Configurable monitoring intervals\n\n### SMS Delivery Management\n- Integrates with Twilio Messaging Service for reliable SMS delivery\n- Customizable message templates with character counter\n- Phone number validation and normalization (US format)\n- Real-time delivery status tracking\n- Detailed error logging with reason extraction\n\n### Statistics & Visualization\n- Real-time delivery success/failure statistics\n- Interactive pie charts showing success rates\n- 14-day historical trend analysis with line charts\n- Session-based and cumulative statistics tracking\n- Uptime monitoring\n\n### Slack Integration\n- Automatic Slack notifications after each batch processing\n- Delayed posting (45s) to ensure accurate delivery statuses\n- Detailed reports including total sent, success count, and failure count\n\n### Professional UI/UX\n- Built with CustomTkinter for modern, polished interface\n- Animated splash screen during application startup\n- Dark/Light mode support\n- Real-time status updates and activity logging\n- Persistent settings across sessions\n- Export functionality for detailed reports\n\n### Enterprise Features\n- Single-file executable for easy deployment\n- Resource bundling (logo, animated GIF)\n- Background thread processing for responsive UI\n- Graceful error handling and logging\n- Auto-start monitoring capability\n\n## Technical Implementation\n\nThe application uses a multi-threaded architecture to ensure the UI remains responsive during SMS processing. The directory monitoring runs on a separate thread, and Slack notifications are posted asynchronously to avoid blocking the main application.\n\nStatistics are persisted to disk using JSON, allowing historical tracking across application restarts. The application uses matplotlib for generating real-time charts embedded directly in the CustomTkinter interface.\n\n## Production Use\n\nThis application is actively used by SNO911.org's Nurse Navigation Program to communicate with patients who have been recently referred to their services. It has successfully processed thousands of SMS messages with comprehensive tracking and reporting.",
+  "status": "production",
+  "labels": [
+    "Healthcare",
+    "SMS Management",
+    "Twilio Integration",
+    "Slack Integration",
+    "Desktop Application",
+    "Automation",
+    "Data Visualization"
+  ],
+  "technologies": [
+    "Python",
+    "CustomTkinter",
+    "Twilio API",
+    "Slack Webhooks",
+    "Matplotlib",
+    "PIL/Pillow",
+    "PyInstaller",
+    "Threading",
+    "JSON"
+  ],
+  "metrics": {
+    "developmentHours": 60
+  },
+  "screenshots": [
+    "/screenshots/nursenav/main-dashboard.png",
+    "/screenshots/nursenav/live-statistics.png",
+    "/screenshots/nursenav/message-logging.png",
+    "/screenshots/nursenav/slack-integration.png"
+  ],
+  "thumbnailUrl": "/screenshots/nursenav/main-dashboard.png",
+  "demoType": "none",
+  "currentVersion": "21.0.0",
+  "createdAt": "2024-07-11T00:00:00.000Z",
+  "updatedAt": "2024-10-16T00:00:00.000Z",
+  "featured": true,
+  "sortOrder": 1
+}

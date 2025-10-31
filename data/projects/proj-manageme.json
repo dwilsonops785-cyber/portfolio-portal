@@ -1,0 +1,42 @@
+{
+  "id": "proj-manageme-001",
+  "slug": "manageme-task-manager",
+  "title": "ManageMe - Personal Task Manager",
+  "shortDescription": "A desktop task management application that helps you keep important tasks from getting lost as priorities shift. ManageMe provides gentle, daily visibility without feeling nagging.",
+  "longDescription": "# ManageMe - Personal Task Manager\n\nA desktop task management application that helps you keep important tasks from getting lost as priorities shift. ManageMe provides gentle, daily visibility without feeling nagging.\n\n## Features (Milestone 1 - MVP Local Only)\n\n- **Task Management**: Create, edit, complete, and snooze tasks\n- **Priority System**: High, Medium, Low, and Unset priorities with color-coded cards\n- **Daily Refresh Ritual**: Automated daily presentation of all open tasks at your configured time (PST)\n- **Smart Grid Layout**: Tasks displayed in an organized grid, sorted by priority\n- **Snooze Functionality**: Hide tasks until a specific time (quick presets or custom)\n- **Settings Panel**: Configure daily refresh time and snooze presets\n- **SQLite Storage**: All data stored locally in your home directory\n\n## Technical Architecture\n\n**Frontend**: Built with PySide6 (Qt framework) for a native desktop experience\n\n**Backend**: FastAPI server with SQLModel ORM for data management\n\n**Database**: SQLite for local storage\n\n**Integrations**: Slack SDK for future milestone features\n\n**Scheduling**: APScheduler for automated daily refresh notifications\n\n## Development Notes\n\nThis project was developed entirely with Claude AI assistance, showcasing the power of AI-assisted development for creating production-ready applications.",
+  "status": "production",
+  "labels": [
+    "Productivity",
+    "Task Management",
+    "Slack Integration",
+    "Claude AI",
+    "AI Developed",
+    "Desktop Application"
+  ],
+  "technologies": [
+    "Python",
+    "PySide6 (Qt)",
+    "FastAPI",
+    "SQLModel",
+    "Uvicorn",
+    "Slack SDK",
+    "APScheduler",
+    "SQLite"
+  ],
+  "metrics": {
+    "developmentHours": 40
+  },
+  "screenshots": [
+    "/screenshots/manageme/login.png",
+    "/screenshots/manageme/main-dashboard.png",
+    "/screenshots/manageme/task-creation.png",
+    "/screenshots/manageme/edit-task.png",
+    "/screenshots/manageme/settings-panel.png"
+  ],
+  "demoType": "none",
+  "currentVersion": "1.0.0",
+  "createdAt": "2025-01-15T00:00:00.000Z",
+  "updatedAt": "2025-01-15T00:00:00.000Z",
+  "featured": true,
+  "sortOrder": 0
+}
