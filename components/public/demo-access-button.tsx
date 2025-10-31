@@ -8,26 +8,90 @@ interface DemoAccessButtonProps {
   projectSlug: string;
 }
 
-// Demo credentials configuration
-const DEMO_CREDENTIALS: Record<string, { username: string; password: string } | null> = {
-  'sno911-resource-depletion-monitor': {
-    username: 'dwilson',
-    password: '$SNO911Resource!'
-  },
-  // Add more projects with demo credentials here as needed
-};
+interface DemoCredentials {
+  username: string;
+  password: string;
+}
+
+// Projects that require demo access codes
+const REQUIRES_ACCESS_CODE = ['sno911-resource-depletion-monitor'];
 
 export function DemoAccessButton({ demoUrl, demoType, projectSlug }: DemoAccessButtonProps) {
-  const [showCredentials, setShowCredentials] = useState(false);
-  const demoCredentials = DEMO_CREDENTIALS[projectSlug];
+  const [showAccessModal, setShowAccessModal] = useState(false);
+  const [accessCode, setAccessCode] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [error, setError] = useState('');
+  const [credentials, setCredentials] = useState<DemoCredentials | null>(null);
+
+  const requiresAccessCode = REQUIRES_ACCESS_CODE.includes(projectSlug);
 
   const handleDemoClick = () => {
-    window.open(demoUrl, '_blank', 'noopener,noreferrer');
+    if (requiresAccessCode) {
+      setShowAccessModal(true);
+      setError('');
+      setAccessCode('');
+    } else {
+      window.open(demoUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleAccessSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsVerifying(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/demo-access', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          projectSlug,
+          accessCode: accessCode.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.credentials) {
+        setCredentials(data.credentials);
+        setShowAccessModal(false);
+
+        // Open the demo in a new window
+        const demoWindow = window.open(demoUrl, '_blank', 'noopener,noreferrer');
+
+        // Show a brief notification with credentials for them to use
+        setTimeout(() => {
+          alert(
+            `Demo Access Granted!\n\n` +
+            `The demo has been opened in a new window.\n\n` +
+            `Use these credentials to log in:\n` +
+            `Username: ${data.credentials.username}\n` +
+            `Password: ${data.credentials.password}\n\n` +
+            `Note: These credentials are for demonstration purposes only.`
+          );
+        }, 500);
+      } else {
+        setError(data.message || 'Invalid access code');
+      }
+    } catch (err) {
+      setError('Failed to verify access code. Please try again.');
+      console.error('Demo access error:', err);
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
+  const handleModalClose = () => {
+    setShowAccessModal(false);
+    setAccessCode('');
+    setError('');
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-4">
+    <>
+      <div className="space-y-4">
         <button
           onClick={handleDemoClick}
           className="inline-flex items-center gap-2 btn btn-primary"
@@ -38,69 +102,79 @@ export function DemoAccessButton({ demoUrl, demoType, projectSlug }: DemoAccessB
           </svg>
         </button>
 
-        {demoCredentials && (
-          <button
-            onClick={() => setShowCredentials(!showCredentials)}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors text-sm"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            {showCredentials ? 'Hide' : 'Show'} Demo Credentials
-          </button>
+        {requiresAccessCode && (
+          <p className="text-sm text-gray-400">
+            🔒 This demo requires an access code. Contact the developer for access.
+          </p>
         )}
       </div>
 
-      {/* Credentials Panel */}
-      {demoCredentials && showCredentials && (
-        <div className="p-4 bg-gray-800/50 border border-gray-700 rounded-lg animate-fadeIn">
-          <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 mt-0.5">
-              <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
+      {/* Access Code Modal */}
+      {showAccessModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 border border-gray-700 rounded-lg shadow-2xl max-w-md w-full p-6 animate-fadeIn">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-white">Demo Access Required</h3>
+              <button
+                onClick={handleModalClose}
+                className="text-gray-400 hover:text-white transition-colors"
+                aria-label="Close"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
-            <div className="flex-1">
-              <h3 className="text-sm font-semibold text-gray-200 mb-2">Demo Access Credentials</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-400 w-20">Username:</span>
-                  <code className="px-2 py-1 bg-gray-900 border border-gray-700 rounded text-accent font-mono">
-                    {demoCredentials.username}
-                  </code>
-                  <button
-                    onClick={() => navigator.clipboard.writeText(demoCredentials.username)}
-                    className="p-1 hover:bg-gray-700 rounded transition-colors"
-                    title="Copy username"
-                  >
-                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                  </button>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-400 w-20">Password:</span>
-                  <code className="px-2 py-1 bg-gray-900 border border-gray-700 rounded text-accent font-mono">
-                    {demoCredentials.password}
-                  </code>
-                  <button
-                    onClick={() => navigator.clipboard.writeText(demoCredentials.password)}
-                    className="p-1 hover:bg-gray-700 rounded transition-colors"
-                    title="Copy password"
-                  >
-                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                  </button>
-                </div>
+
+            <p className="text-gray-300 mb-6">
+              Enter the access code to view this demo. If you don't have an access code, please contact the developer.
+            </p>
+
+            <form onSubmit={handleAccessSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="accessCode" className="block text-sm font-medium text-gray-300 mb-2">
+                  Access Code
+                </label>
+                <input
+                  type="text"
+                  id="accessCode"
+                  value={accessCode}
+                  onChange={(e) => setAccessCode(e.target.value)}
+                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                  placeholder="Enter access code"
+                  required
+                  autoFocus
+                  disabled={isVerifying}
+                />
               </div>
-              <p className="text-xs text-gray-500 mt-3">
-                ℹ️ This is a demo environment for portfolio demonstration purposes.
-              </p>
-            </div>
+
+              {error && (
+                <div className="p-3 bg-red-900/20 border border-red-500/50 rounded-lg">
+                  <p className="text-sm text-red-400">{error}</p>
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handleModalClose}
+                  className="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+                  disabled={isVerifying}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2 bg-accent hover:bg-accent/80 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isVerifying || !accessCode.trim()}
+                >
+                  {isVerifying ? 'Verifying...' : 'Access Demo'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
