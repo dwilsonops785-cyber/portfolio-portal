@@ -34,13 +34,13 @@ export function ProjectShowcaseCarousel({ projects }: ProjectShowcaseCarouselPro
     }));
   });
 
-  // Auto-cycle through images every 4 seconds (pause on hover)
+  // Auto-cycle through images every 3 seconds (pause on hover)
   useEffect(() => {
     if (isHovered || showcaseImages.length <= 1) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % showcaseImages.length);
-    }, 4000);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [isHovered, showcaseImages.length]);
