@@ -189,7 +189,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             <div className="prose prose-invert max-w-none
               prose-headings:font-bold
               prose-h1:text-3xl prose-h1:text-accent prose-h1:mb-6 prose-h1:mt-0
-              prose-h2:text-2xl prose-h2:text-accent prose-h2:mb-5 prose-h2:mt-10 prose-h2:pb-3 prose-h2:border-b-2 prose-h2:border-accent/30
+              prose-h2:text-2xl prose-h2:text-accent prose-h2:mb-6 prose-h2:mt-10 prose-h2:pb-4 prose-h2:border-b-2 prose-h2:border-blue-500 prose-h2:text-center
               prose-h3:text-lg prose-h3:text-blue-400 prose-h3:mb-5 prose-h3:mt-8 prose-h3:font-bold prose-h3:text-center prose-h3:pb-3 prose-h3:border-b-2 prose-h3:border-blue-500
               prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-4 prose-p:text-base
               prose-ul:my-3 prose-ul:space-y-2.5 prose-ul:bg-gray-900/30 prose-ul:p-4 prose-ul:rounded-lg prose-ul:border prose-ul:border-gray-800
@@ -204,14 +204,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               [&_li::before]:content-[''] [&_li::before]:flex-shrink-0 [&_li::before]:w-1.5 [&_li::before]:h-1.5 [&_li::before]:rounded-full [&_li::before]:bg-accent [&_li::before]:mt-2">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
-                components={{
-                  h2: ({node, ...props}) => (
-                    <h2 className="flex items-center gap-3 group" {...props}>
-                      <span className="flex-shrink-0 w-1.5 h-8 bg-accent rounded-full"></span>
-                      <span className="flex-1">{props.children}</span>
-                    </h2>
-                  ),
-                }}
+                components={{}}
               >
                 {project.longDescription}
               </ReactMarkdown>
