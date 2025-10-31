@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { getProjectBySlug, getAllProjects } from '@/lib/utils/projects';
 import { Card } from '@/components/ui/card';
 import { ScreenshotGallery } from '@/components/public/screenshot-gallery';
@@ -86,7 +88,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <Card className="mb-8 p-6">
             <h2 className="text-2xl font-bold mb-4">About This Project</h2>
             <div className="prose prose-invert max-w-none">
-              <p className="text-gray-300 whitespace-pre-wrap">{project.longDescription}</p>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {project.longDescription}
+              </ReactMarkdown>
             </div>
           </Card>
         )}
