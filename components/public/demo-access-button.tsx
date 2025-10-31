@@ -12,7 +12,7 @@ interface DemoAccessButtonProps {
 const DEMO_CREDENTIALS: Record<string, { username: string; password: string } | null> = {
   'sno911-resource-depletion-monitor': {
     username: 'dwilson',
-    password: '$SNO911Resource!'
+    password: '$$Admin!$@#'
   },
   // Add more projects with demo credentials here as needed
 };
