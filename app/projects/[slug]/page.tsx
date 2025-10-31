@@ -83,18 +83,6 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <p className="text-lg text-gray-300">{project.shortDescription}</p>
         </Card>
 
-        {/* Long Description */}
-        {project.longDescription && (
-          <Card className="mb-8 p-6">
-            <h2 className="text-2xl font-bold mb-4">About This Project</h2>
-            <div className="prose prose-invert max-w-none">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {project.longDescription}
-              </ReactMarkdown>
-            </div>
-          </Card>
-        )}
-
         {/* Screenshots */}
         {project.screenshots && project.screenshots.length > 0 && (
           <Card className="mb-8 p-6">
@@ -180,7 +168,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         )}
 
         {/* Metadata */}
-        <Card className="p-6">
+        <Card className="mb-8 p-6">
           <h2 className="text-2xl font-bold mb-4">Project Information</h2>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
@@ -193,6 +181,18 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             </div>
           </div>
         </Card>
+
+        {/* Long Description - Moved to bottom */}
+        {project.longDescription && (
+          <Card className="p-6">
+            <h2 className="text-2xl font-bold mb-4">About This Project</h2>
+            <div className="prose prose-invert max-w-none">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {project.longDescription}
+              </ReactMarkdown>
+            </div>
+          </Card>
+        )}
       </div>
     </div>
   );
