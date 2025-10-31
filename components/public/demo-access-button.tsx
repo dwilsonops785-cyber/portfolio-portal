@@ -58,20 +58,18 @@ export function DemoAccessButton({ demoUrl, demoType, projectSlug }: DemoAccessB
         setCredentials(data.credentials);
         setShowAccessModal(false);
 
-        // Open the demo in a new window
-        const demoWindow = window.open(demoUrl, '_blank', 'noopener,noreferrer');
+        // Show credentials first (blocks until user clicks OK)
+        alert(
+          `Demo Access Granted!\n\n` +
+          `Use these credentials to log in:\n` +
+          `Username: ${data.credentials.username}\n` +
+          `Password: ${data.credentials.password}\n\n` +
+          `Click OK to open the demo in a new tab.\n\n` +
+          `Note: These credentials are for demonstration purposes only.`
+        );
 
-        // Show a brief notification with credentials for them to use
-        setTimeout(() => {
-          alert(
-            `Demo Access Granted!\n\n` +
-            `The demo has been opened in a new window.\n\n` +
-            `Use these credentials to log in:\n` +
-            `Username: ${data.credentials.username}\n` +
-            `Password: ${data.credentials.password}\n\n` +
-            `Note: These credentials are for demonstration purposes only.`
-          );
-        }, 500);
+        // After user clicks OK, open the demo in a new window
+        window.open(demoUrl, '_blank', 'noopener,noreferrer');
       } else {
         setError(data.message || 'Invalid access code');
       }
