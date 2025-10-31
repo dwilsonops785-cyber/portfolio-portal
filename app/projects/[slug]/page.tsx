@@ -107,7 +107,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             </h2>
             <DemoAccessButton
               demoUrl={project.demoUrl}
-              demoType={project.demoType}
+              demoType={project.demoType || 'live'}
               projectSlug={project.slug}
             />
           </Card>
