@@ -3,10 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ContactModal } from './contact-modal';
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const pathname = usePathname();
 
   // Handle scroll effect
@@ -70,12 +72,12 @@ export function Navigation() {
               >
                 Projects
               </Link>
-              <a
-                href="/#contact"
+              <button
+                onClick={() => setIsContactModalOpen(true)}
                 className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
               >
                 Contact
-              </a>
+              </button>
               <Link
                 href="/admin/login"
                 className="text-sm font-medium text-gray-400 hover:text-accent transition-colors"
@@ -163,12 +165,15 @@ export function Navigation() {
             >
               Projects
             </Link>
-            <a
-              href="/#contact"
-              className="block px-4 py-3 rounded-lg text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition-all"
+            <button
+              onClick={() => {
+                setIsContactModalOpen(true);
+                setIsMenuOpen(false);
+              }}
+              className="w-full text-left block px-4 py-3 rounded-lg text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition-all"
             >
               Contact
-            </a>
+            </button>
             <Link
               href="/admin/login"
               className="block px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-accent transition-all"
@@ -188,6 +193,12 @@ export function Navigation() {
 
       {/* Spacer to prevent content from hiding under fixed nav */}
       <div className="h-16" />
+
+      {/* Contact Modal */}
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+      />
     </>
   );
 }
