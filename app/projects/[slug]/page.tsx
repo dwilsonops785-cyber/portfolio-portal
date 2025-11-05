@@ -29,29 +29,35 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <div className="border-b border-gray-800">
-        <div className="max-w-5xl mx-auto px-8 py-8">
-          <Link href="/" className="text-accent hover:underline text-sm mb-4 inline-block">
-            ← Back to Projects
+      <div className="border-b border-gray-800 bg-gray-900/50">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-accent hover:text-accent/80 text-sm font-medium transition-colors group"
+          >
+            <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Projects
           </Link>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-5xl mx-auto px-8 py-12">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Title and Status */}
-        <div className="mb-8">
-          <div className="flex items-start justify-between mb-4">
-            <h1 className="text-4xl md:text-5xl font-bold">{project.title}</h1>
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">{project.title}</h1>
             {project.featured && (
-              <span className="text-sm px-3 py-1 bg-accent/20 text-accent rounded ml-4 flex-shrink-0">
+              <span className="text-xs sm:text-sm px-3 py-1.5 bg-accent/20 text-accent rounded-full w-fit font-medium">
                 Featured
               </span>
             )}
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-3">
             <span
-              className={`text-sm px-4 py-2 rounded ${
+              className={`text-xs sm:text-sm px-4 py-2 rounded-full font-medium ${
                 project.status === 'production'
                   ? 'bg-success/20 text-success'
                   : project.status === 'development'
@@ -62,14 +68,14 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               {project.status}
             </span>
             {project.currentVersion && (
-              <span className="text-gray-400">Version {project.currentVersion}</span>
+              <span className="text-gray-400 text-sm font-mono">Version {project.currentVersion}</span>
             )}
           </div>
         </div>
 
         {/* Thumbnail */}
         {project.thumbnailUrl && (
-          <div className="mb-8 rounded-lg overflow-hidden bg-gray-900">
+          <div className="mb-6 sm:mb-8 rounded-lg overflow-hidden bg-gray-900 shadow-xl">
             <img
               src={project.thumbnailUrl}
               alt={project.title}
@@ -79,22 +85,22 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         )}
 
         {/* Short Description */}
-        <Card className="mb-8 p-6">
-          <p className="text-lg text-gray-300">{project.shortDescription}</p>
+        <Card className="mb-6 sm:mb-8 p-4 sm:p-6">
+          <p className="text-base sm:text-lg text-gray-300 leading-relaxed">{project.shortDescription}</p>
         </Card>
 
         {/* Screenshots */}
         {project.screenshots && project.screenshots.length > 0 && (
-          <Card className="mb-8 p-6">
-            <h2 className="text-2xl font-bold mb-4">Screenshots</h2>
+          <Card className="mb-6 sm:mb-8 p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4">Screenshots</h2>
             <ScreenshotGallery screenshots={project.screenshots} projectTitle={project.title} />
           </Card>
         )}
 
         {/* Demo */}
         {project.demoUrl && project.demoType !== 'none' && (
-          <Card className="mb-8 p-6">
-            <h2 className="text-2xl font-bold mb-4">
+          <Card className="mb-6 sm:mb-8 p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4">
               {project.demoType === 'live' ? 'Live Demo' : 'Video Demo'}
             </h2>
             <DemoAccessButton
@@ -107,13 +113,13 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
         {/* Technologies */}
         {project.technologies.length > 0 && (
-          <Card className="mb-8 p-6">
-            <h2 className="text-2xl font-bold mb-4">Technologies Used</h2>
-            <div className="flex flex-wrap gap-3">
+          <Card className="mb-6 sm:mb-8 p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4">Technologies Used</h2>
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               {project.technologies.map((tech) => (
                 <span
                   key={tech}
-                  className="px-4 py-2 bg-card border border-gray-700 rounded-lg text-gray-300"
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 bg-card border border-gray-700 rounded-lg text-gray-300 text-sm hover:border-accent/30 transition-colors"
                 >
                   {tech}
                 </span>
@@ -124,11 +130,11 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
         {/* Labels */}
         {project.labels.length > 0 && (
-          <Card className="mb-8 p-6">
-            <h2 className="text-2xl font-bold mb-4">Categories</h2>
-            <div className="flex flex-wrap gap-3">
+          <Card className="mb-6 sm:mb-8 p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4">Categories</h2>
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               {project.labels.map((label) => (
-                <span key={label} className="px-4 py-2 bg-accent/10 text-accent rounded-lg">
+                <span key={label} className="px-3 py-1.5 sm:px-4 sm:py-2 bg-accent/10 text-accent rounded-lg text-sm font-medium">
                   {label}
                 </span>
               ))}
@@ -138,29 +144,29 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
         {/* Metrics */}
         {project.metrics && (
-          <Card className="mb-8 p-6">
-            <h2 className="text-2xl font-bold mb-4">Project Metrics</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="mb-6 sm:mb-8 p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-5">Project Metrics</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
               {project.metrics.startDate && (
-                <div>
-                  <div className="text-sm text-gray-400 mb-1">Start Date</div>
-                  <div className="text-lg font-medium">
+                <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800">
+                  <div className="text-xs sm:text-sm text-gray-400 mb-1.5">Start Date</div>
+                  <div className="text-base sm:text-lg font-medium">
                     {new Date(project.metrics.startDate).toLocaleDateString()}
                   </div>
                 </div>
               )}
               {project.metrics.completionDate && (
-                <div>
-                  <div className="text-sm text-gray-400 mb-1">Completion Date</div>
-                  <div className="text-lg font-medium">
+                <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800">
+                  <div className="text-xs sm:text-sm text-gray-400 mb-1.5">Completion Date</div>
+                  <div className="text-base sm:text-lg font-medium">
                     {new Date(project.metrics.completionDate).toLocaleDateString()}
                   </div>
                 </div>
               )}
               {project.metrics.developmentHours && (
-                <div>
-                  <div className="text-sm text-gray-400 mb-1">Development Hours</div>
-                  <div className="text-lg font-medium">{project.metrics.developmentHours}h</div>
+                <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800">
+                  <div className="text-xs sm:text-sm text-gray-400 mb-1.5">Development Hours</div>
+                  <div className="text-base sm:text-lg font-medium">{project.metrics.developmentHours}h</div>
                 </div>
               )}
             </div>
@@ -168,16 +174,16 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         )}
 
         {/* Metadata */}
-        <Card className="mb-8 p-6">
-          <h2 className="text-2xl font-bold mb-4">Project Information</h2>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
+        <Card className="mb-6 sm:mb-8 p-4 sm:p-6">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">Project Information</h2>
+          <div className="space-y-3 text-sm">
+            <div className="flex justify-between items-center py-2 border-b border-gray-800">
               <span className="text-gray-400">Created</span>
-              <span>{new Date(project.createdAt).toLocaleDateString()}</span>
+              <span className="font-medium">{new Date(project.createdAt).toLocaleDateString()}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center py-2">
               <span className="text-gray-400">Last Updated</span>
-              <span>{new Date(project.updatedAt).toLocaleDateString()}</span>
+              <span className="font-medium">{new Date(project.updatedAt).toLocaleDateString()}</span>
             </div>
           </div>
         </Card>
